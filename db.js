@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { UUID, UUIDV4, STRING } = Sequelize;
-const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/acme_user_departments');
+const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/acme_user_departments', { logging: false});
 
 //Models:
 
@@ -20,7 +20,8 @@ const User = conn.define('user', {
 const Department = conn.define('department', {
     id: {
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
     },
     name: {
         type: Sequelize.STRING,
@@ -33,6 +34,7 @@ const Department = conn.define('department', {
 
 User.belongsTo(Department);
 Department.hasMany(User);
+
 
 //Sync:
 
@@ -54,7 +56,16 @@ const syncOrSwim = async()=> {
         {name: 'Felix', departmentId: Management.id}
     ];
 
-    await Promise.all(users.map(user => User.create(user)));
+    const [ Dave, Barbara, Devandra, Felix ] = await Promise.all(users.map(user => User.create(user)));
+
+    return {
+        users: {
+            Dave, 
+            Barbara,
+            Devandra,
+            Felix
+        }
+    }
 };
 
 //Export Modules/Models: 
