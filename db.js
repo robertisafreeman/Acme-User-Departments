@@ -64,6 +64,12 @@ const syncOrSwim = async()=> {
             Barbara,
             Devandra,
             Felix
+        },
+        departments: {
+            Plumbing,
+            Sculpting,
+            Tech,
+            Management
         }
     }
 };
